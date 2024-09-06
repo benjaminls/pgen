@@ -4,21 +4,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 PROJECT(pgen VERSION 0.1.0)
 
-include(FetchContent)
+include(cmake/CPM.cmake)
 
-# fetch latest argparse
-FetchContent_Declare(
-    argparse
-    GIT_REPOSITORY https://github.com/p-ranav/argparse.git
+CPMAddPackage(
+    NAME argparse
+    # I don't know why "GIT_TAG v1.0" is needed but it is. Removing it, 
+    # using v${ARGPARSE_VERSION}, or using v3.1 all fail. 
+    GIT_TAG v1.0
+    GITHUB_REPOSITORY p-ranav/argparse
 )
-FetchContent_MakeAvailable(argparse)
-
-# fetch latest spdlog
-FetchContent_Declare(
-  spdlog
-  GIT_REPOSITORY https://github.com/gabime/spdlog.git
-  GIT_TAG v1.11.0)
-FetchContent_MakeAvailable(spdlog)
+CPMAddPackage(
+    NAME spdlog
+    GIT_TAG v1.14.1
+    GITHUB_REPOSITORY gabime/spdlog # to use our installed fmt lib
+    # OPTIONS "SPDLOG_FMT_EXTERNAL YES"
+)
 
 add_executable(pgen main.cpp)
-target_link_libraries(pgen argparse)
+target_link_libraries(pgen argparse spdlog)
